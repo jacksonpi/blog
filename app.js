@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')//npm install --save body-parser
 const admin = require("./routes/admim")
 const app = express()
 const path = require("path")
-//const mongoose = require('mongoose')
+const mongoose = require('mongoose')
 //Configurações 
  //Body-Parser
   app.use(bodyParser.urlencoded({extended:true}))
@@ -13,6 +13,12 @@ const path = require("path")
   app.engine('handlebars',handlebars({defaultLayout:'main'}))
   app.set('view engine','handlebars')
   //Mongoose
+  mongoose.Promise = global.Promise
+  mongoose.connect("mongodb://localhost/blogapp").then(()=>{
+    console.log("BD Conectado!")
+  }).catch((erro)=>{
+    console.log("Erro ao conectar:"+erro)
+  })
 //Public
   app.use(express.static(path.join(__dirname,"public"))) //dirname pega o diretório absoluto
 //Rotas
