@@ -3,6 +3,7 @@ const routes = express.Router()
 const mongoose = require('mongoose')
 require("../models/Usuario")
 const Usuario = mongoose.model("usuarios")
+const bcrypt = require("bcryptjs")
 
 routes.get("/registro",(req,res)=>{
     res.render("usuarios/registro")
@@ -34,7 +35,33 @@ routes.post("/registro",(req,res)=>{
     if(erros.length > 0){
         res.render("usuarios/registro",{erros:erros})
     }else{
+       Usuario.findOne({email:req.body.email).then((usuario)=>{
+           if(usuario){
+              req.flash("error_msg","Já existe uma conta com esse email!")
+              res.redirect("/registro")
+           }else{
+              
+              const novoUsuario = new Usuario({
+                   nome:req.body.nome,
+                   email:req.body.email,
+                   senha:req.body.senha
+              })
 
+              bcrypt.genSalt(10,(erro,salt)=>{
+                  bcrypt.hash(novoUsuario.senha,salt,(erro,hash)=>{
+                      if(erro){
+                          req.flash("error_msg","Erro ao salvar usuário!")
+                      }
+                  })
+              })
+
+
+
+           }
+       }).catch((erro)=>{
+           req.flash("error_msg","Houve um erro interno!")
+           res.redirect("/")
+       })
     }
 })
 
