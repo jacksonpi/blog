@@ -35,7 +35,7 @@ routes.post("/registro",(req,res)=>{
     if(erros.length > 0){
         res.render("usuarios/registro",{erros:erros})
     }else{
-       Usuario.findOne({email:req.body.email).then((usuario)=>{
+       Usuario.findOne({email:req.body.email}).then((usuario)=>{
            if(usuario){
               req.flash("error_msg","Já existe uma conta com esse email!")
               res.redirect("/registro")
