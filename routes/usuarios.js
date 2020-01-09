@@ -38,7 +38,7 @@ routes.post("/registro",(req,res)=>{
        Usuario.findOne({email:req.body.email}).then((usuario)=>{
            if(usuario){
               req.flash("error_msg","Já existe uma conta com esse email!")
-              res.redirect("/registro")
+              res.redirect("/usuarios/registro")
            }else{
               
               const novoUsuario = new Usuario({
@@ -51,11 +51,18 @@ routes.post("/registro",(req,res)=>{
                   bcrypt.hash(novoUsuario.senha,salt,(erro,hash)=>{
                       if(erro){
                           req.flash("error_msg","Erro ao salvar usuário!")
+                          res.redirect("/")
                       }
+                      novoUsuario.senha = hash
+                      novoUsuario.save().then(()=>{
+                          req.flash("success_msg","Usuário criado!")
+                          res.redirect("/")
+                      }).catch(()=>{
+                        req.flash("error_msg","Erro ao salvar usuário, tente novamente!")
+                        res.redirect("/usuarios/registro")
+                      })
                   })
               })
-
-
 
            }
        }).catch((erro)=>{
@@ -63,6 +70,10 @@ routes.post("/registro",(req,res)=>{
            res.redirect("/")
        })
     }
+})
+
+routes.get("/login",(req,res)=>{
+    res.render("usuarios/login")
 })
 
 module.exports = routes
