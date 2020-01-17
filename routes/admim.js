@@ -220,4 +220,12 @@ routes.post("/contatos",(req,res)=>{
     })
  })
 
+ routes.get("/busca",(req,res)=>{
+    res.render("admin/busca")
+ })
+
+ routes.get("/sobre",(req,res)=>{
+     res.render("admin/sobre")
+ })
+
 module.exports = routes

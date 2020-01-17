@@ -10,11 +10,11 @@ const Contato = new Schema({
         type:String,
         required:true
     },
-    segestao:{
+    motivo:{
         type:String,
         required:true
     },
-    semensagem:{
+    mensagem:{
         type:String,
         required:true
     }
